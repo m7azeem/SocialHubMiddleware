@@ -61,4 +61,31 @@ documentation:
               {
                 "success" : "false",
                 "message" : "Incorrect password entered."
+              }   
+/testTwiter:
+  post:
+    description: Takes the user's login details as input, and returns success=true if login details are correct   
+    body:
+      application/json:
+        example: |  
+          {
+                  "userName" : "m7azeem",
+                  "password" : hidden
+          }
+    responses:
+      200:
+        body:
+          application/json:
+            example: |
+                {
+                  "success" : "true",
+                  "message" : null
+                }
+      400:
+        body:
+          application/json:
+            example: |
+              {
+                "success" : "false",
+                "message" : "Incorrect password entered."
               }
