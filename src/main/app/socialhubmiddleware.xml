@@ -27,4 +27,9 @@ http://www.mulesoft.org/schema/mule/apikit http://www.mulesoft.org/schema/mule/a
 		<byte-array-to-string-transformer doc:name="Byte Array to String"/>
 		<set-payload value="#[['success':true, 'message': null]]" doc:name="Set Payload"/>
     </flow>
+    
+    <flow name="post:/loginUser:api-config">
+		<byte-array-to-string-transformer doc:name="Byte Array to String"/>
+		<set-payload value="#[['success':true, 'message': null]]" doc:name="Set Payload"/>
+    </flow>
 </mule>
