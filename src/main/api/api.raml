@@ -1,0 +1,37 @@
+#%RAML 0.8
+---
+title: SocialHub Middleware API
+version: v1.0
+baseUri: http://socialhub/api
+documentation:
+  - title: Introduction
+    content: |
+      API for user-authentication, and retriving posts from twitter and instagram.
+      
+/registerUser:
+  post:
+    description: Takes the user details as input and registers user in the database. 
+    body:
+      application/json:
+        example: |  
+          {
+                  "userName" : "m7azeem",
+                  "password" : hidden
+          }
+    responses:
+      200:
+        body:
+          application/json:
+            example: |
+                {
+                  "success" : "true",
+                  "message" : null
+                }
+      400:
+        body:
+          application/json:
+            example: |
+              {
+                "success" : "false",
+                "message" : "User with similar user-name already registered."
+              }

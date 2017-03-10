@@ -10,3 +10,7 @@ Middleware to connect between twitter and instagram APIs, and our frontend
 6. Go to File > Import...
 7. Select Git > Projects from Git > URI
 8. Paste the URI ``` https://github.com/m7azeem/SocialHubMiddleware.git ``` and clone the **master** branch
+
+
+## API documentation
+- Check out and test the API calls avaliable from http://localhost:8082/socialhub/console/
