@@ -30,7 +30,8 @@ http://www.mulesoft.org/schema/mule/apikit http://www.mulesoft.org/schema/mule/a
     
     <flow name="post:/loginUser:api-config">
 		<byte-array-to-string-transformer doc:name="Byte Array to String"/>
-		<set-payload value="#[['success':true, 'message': null]]" doc:name="Set Payload"/>
+        <component class="socialhubmiddleware.LoginUser" doc:name="Java"/>
+		
     </flow>
     <flow name="post:/testTwitter:api-config">
 		<byte-array-to-string-transformer doc:name="Byte Array to String"/>

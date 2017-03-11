@@ -52,17 +52,27 @@ public class MongoManager {
 		return exists;
 	}
 	
-	public String addUser(JSONObject jObj){
-		BasicDBObject document = new BasicDBObject();
-		document.put("username", jObj.getString("username"));
-		String password = jObj.getString("password");
-		//hash password
-		document.put("password", password);
-		document.put("email", jObj.getString("email"));
-		Object obj = usersCollection.insert(document);
-		System.out.println(obj.toString());
-		return null;
+	public boolean checkIfUsernameExists(String username, String password){
+		BasicDBObject searchQuery = new BasicDBObject();
+		searchQuery.put("username", username);
+		searchQuery.put("password", Hasher.hashPass(password));
+		DBCursor cursor = usersCollection.find(searchQuery);
+		boolean exists =false;
+		if (cursor.length()>0) {
+			exists = true;
+		}
+		return exists;
 	}
+	
+	public String addUser(BasicDBObject document){
+		document.replace("password", Hasher.hashPass((String) document.get("password")));
+		System.out.println(document.toString());
+		System.out.println();
+		Object obj = usersCollection.insert(document);
+		System.out.println(document.toString());
+		return document.toString();
+	}
+	
 	public void closeMongoConnection(){
 		mongoClient.close();
 	}
