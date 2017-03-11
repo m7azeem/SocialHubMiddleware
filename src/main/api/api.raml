@@ -28,13 +28,21 @@ documentation:
                   "success" : "true",
                   "message" : null
                 }
-      400:
+      401:
         body:
           application/json:
             example: |
               {
                 "success" : "false",
-                "message" : "User with similar user-name already registered."
+                "message" : "Email address already in use!"
+              }
+      402:
+        body:
+          application/json:
+            example: |
+              {
+                "success" : "false",
+                "message" : "Username already in use!"
               }
 /loginUser:
   post:
@@ -43,7 +51,7 @@ documentation:
       application/json:
         example: |  
           {
-                  "userName" : "m7azeem",
+                  "username" : "m7azeem",
                   "password" : hidden
           }
     responses:
@@ -54,6 +62,7 @@ documentation:
                 {
                   "success" : "true",
                   "message" : null
+                  "token" : "128bitStringBlablabalabaaljadacio"
                 }
       400:
         body:

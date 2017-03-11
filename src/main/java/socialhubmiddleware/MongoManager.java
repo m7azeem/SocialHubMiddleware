@@ -16,6 +16,7 @@ public class MongoManager {
 	
 	public MongoManager(){
 		
+		
 		try {
 			mongoClient = new MongoClient( "localhost" , 27017 );
 			

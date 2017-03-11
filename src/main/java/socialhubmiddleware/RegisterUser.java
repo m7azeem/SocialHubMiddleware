@@ -2,9 +2,13 @@ package socialhubmiddleware;
 
 import org.json.JSONObject;
 
-import com.google.gson.JsonObject;
+import com.mongodb.BasicDBObject;
+import com.mongodb.DB;
+import com.mongodb.DBObject;
+import com.mongodb.util.JSON;
 
 public class RegisterUser {
+	
 	public String register(String input){
 		boolean exists;
 		JSONObject jObj = new JSONObject(input);
@@ -24,15 +28,13 @@ public class RegisterUser {
 			success = false;
 			errorMessage = "Email address already in use!";
 		}
-		JsonObject jsonObject = new JsonObject();
-		jsonObject.addProperty("success", success);
-		jsonObject.addProperty("message", errorMessage);
-		System.out.println(jsonObject.toString());
-		System.out.println();
-		System.out.println();
+		BasicDBObject output = new BasicDBObject();
+		output.put("success", success);
+		output.put("message", errorMessage);
+		
 		mm.closeMongoConnection();
-		return jsonObject.toString();
+		
+		return output.toString();
 	}
-	
-	
+		
 }
