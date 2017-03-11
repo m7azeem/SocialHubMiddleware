@@ -25,7 +25,7 @@ http://www.mulesoft.org/schema/mule/apikit http://www.mulesoft.org/schema/mule/a
     
     <flow name="post:/registerUser:api-config">
 		<byte-array-to-string-transformer doc:name="Byte Array to String"/>
-		<set-payload value="#[['success':true, 'message': null]]" doc:name="Set Payload"/>
+        <component doc:name="Java" class="socialhubmiddleware.RegisterUser"/>
     </flow>
     
     <flow name="post:/loginUser:api-config">
