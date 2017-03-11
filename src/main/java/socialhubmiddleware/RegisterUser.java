@@ -30,6 +30,7 @@ public class RegisterUser {
 		System.out.println(jsonObject.toString());
 		System.out.println();
 		System.out.println();
+		mm.closeMongoConnection();
 		return jsonObject.toString();
 	}
 	

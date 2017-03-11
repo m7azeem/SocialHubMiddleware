@@ -11,12 +11,14 @@ import com.mongodb.DBCursor;
 import com.mongodb.MongoClient;
 
 public class MongoManager {
+	MongoClient mongoClient = null;
 	DBCollection usersCollection = null;
 	
 	public MongoManager(){
-		MongoClient mongoClient = null;
+		
 		try {
 			mongoClient = new MongoClient( "localhost" , 27017 );
+			
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
 		}
@@ -59,6 +61,9 @@ public class MongoManager {
 		Object obj = usersCollection.insert(document);
 		System.out.println(obj.toString());
 		return null;
+	}
+	public void closeMongoConnection(){
+		mongoClient.close();
 	}
 
 }
