@@ -6,7 +6,7 @@ package socialhubmiddleware;
 public class Hasher {
 	
 	public static String hashPass(String password){
-		//do some hashing
+		//do some hashing here
 		return password;
 	}
 
