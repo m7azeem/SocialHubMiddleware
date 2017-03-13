@@ -15,8 +15,6 @@ public class MongoManager {
 	DBCollection usersCollection = null;
 	
 	public MongoManager(){
-		
-		
 		try {
 			mongoClient = new MongoClient( "localhost" , 27017 );
 			
@@ -27,7 +25,6 @@ public class MongoManager {
 		usersCollection= db.getCollection("users");
 	}
 	
-
 	public boolean checkIfEmailExists(String email){
 		BasicDBObject searchQuery = new BasicDBObject();
 		searchQuery.put("email", email);
