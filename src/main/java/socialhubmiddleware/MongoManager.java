@@ -52,6 +52,16 @@ public class MongoManager {
 		return exists;
 	}
 	
+	public String getPassword(String username){
+		BasicDBObject searchQuery = new BasicDBObject();
+		searchQuery.put("username", username);
+		DBCursor cursor = usersCollection.find(searchQuery);
+		if (cursor.hasNext()) {
+			return cursor.next().get("password").toString();
+		}
+		return null;
+	}
+	
 	public boolean checkIfUsernameExists(String username, String password){
 		BasicDBObject searchQuery = new BasicDBObject();
 		searchQuery.put("username", username);

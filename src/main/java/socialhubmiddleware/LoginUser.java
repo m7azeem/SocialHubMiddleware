@@ -12,7 +12,23 @@ public class LoginUser {
 		//check username/password in db
 		MongoManager mm = new MongoManager();
 		
-		if (mm.checkIfUsernameExists(inputObj.getString("username"), inputObj.getString("password"))){
+		if (mm.checkIfUsernameExists(inputObj.getString("username"))){
+			if (Hasher.checkPass(inputObj.getString("password"), mm.getPassword(inputObj.getString("username")))){
+				//return success with token
+				output.put("success", true);
+				output.put("message", null);
+				output.put("token", TokenGenerator.getToken(inputObj.getString("username")));
+			} else {
+				//return success=false
+				output.put("success", false);
+				output.put("message", "Incorrect password!");
+			}
+		} else {
+			//return success=false
+			output.put("success", false);
+			output.put("message", "Incorrect username!");
+		}
+		/*if (mm.checkIfUsernameExists(inputObj.getString("username"), inputObj.getString("password"))){
 			//return success with token
 			output.put("success", true);
 			output.put("message", null);
@@ -27,7 +43,7 @@ public class LoginUser {
 			}
 			
 		}
-		System.out.println(mm.checkIfUsernameExists(inputObj.getString("username")));
+		*/
 		mm.closeMongoConnection();
 		return output.toString();
 	}
