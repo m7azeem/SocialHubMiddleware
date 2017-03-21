@@ -6,7 +6,12 @@
 package socialhubmiddleware;
 
 import java.net.UnknownHostException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.TimeZone;
 
+import org.apache.commons.lang.time.DateUtils;
 import org.json.JSONObject;
 
 import com.mongodb.BasicDBObject;
@@ -106,6 +111,47 @@ public class MongoManager {
 	
 	public void closeMongoConnection(){
 		mongoClient.close();
+	}
+
+	// This method will store a token for a given user along with an expire date
+	public void storeToken(String username, String token) {
+		
+		// Create document for update
+		BasicDBObject updateDocument = new BasicDBObject();
+		updateDocument.append("token",token);
+		updateDocument.append("tokenExpiry", getExpiryDateForToken());
+		
+		// Create document for set operation append
+		BasicDBObject setOperation = new BasicDBObject();
+		setOperation.append("$set", updateDocument);
+		
+		// Create a search query
+		BasicDBObject searchQuery = new BasicDBObject().append("username", username);
+		
+		// Update collection
+		usersCollection.update(searchQuery, setOperation);
+	}
+	
+	// The purpose of this method is to create and return an expiry date for the token 
+	private String getExpiryDateForToken(){
+		
+		// Get timezone
+		TimeZone tz = TimeZone.getTimeZone("UTC");
+		
+		// Set date format
+		DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm'Z'"); // Quoted "Z" to indicate UTC, no timezone offset
+		
+		// Set timezone
+		df.setTimeZone(tz);
+		
+		// Set expiry date
+		Date expiry = DateUtils.addHours(new Date(), 24);
+		
+		// Get ISO string
+		String expiryString = df.format(expiry);
+		
+		return expiryString;
+		
 	}
 
 }

@@ -20,31 +20,46 @@ public class LoginUser {
 	 * 7. else return success=false with error message
 	 */
 	public String login(String input) {
+		
 		BasicDBObject inputObj = (BasicDBObject) JSON.parse(input);
 
 		BasicDBObject output = new BasicDBObject();
 
-		// check username/password in db
+		// Create new mongo manager
 		MongoManager mm = new MongoManager();
 
+		// Check if user exists in the DB
 		if (mm.checkIfUsernameExists(inputObj.getString("username"))) {
-			if (Hasher.checkPass(inputObj.getString("password"), mm.getPassword(
-					inputObj.getString("username")))) {
+			
+			// check password for the user
+			if (Hasher.checkPass(inputObj.getString("password"), mm.getPassword(inputObj.getString("username")))) {
+				
+				// generate a token
+				String token = TokenGenerator.getToken();
+				
+				// Store token in DB
+				mm.storeToken(inputObj.getString("username"), token);
+				
 				// return success with token
 				output.put("success", true);
 				output.put("message", null);
-				output.put("token", TokenGenerator.getToken());
+				output.put("token", token);
+				
 			} else {
+				
 				// return success=false
 				output.put("success", false);
 				output.put("message", "Incorrect password!");
 			}
 		} else {
+			
 			// return success=false
 			output.put("success", false);
 			output.put("message", "Incorrect username!");
 		}
+		
 		/*
+		 *
 		 * if (mm.checkIfUsernameExists(inputObj.getString("username"),
 		 * inputObj.getString("password"))){ //return success with token
 		 * output.put("success", true); output.put("message", null);
@@ -57,6 +72,7 @@ public class LoginUser {
 		 * 
 		 * }
 		 */
+		
 		mm.closeMongoConnection();
 		return output.toString();
 	}
