@@ -1,3 +1,7 @@
+/* Author(s) : Azeem, Balraj
+ * Date : 21/03/2017
+ */
+
 package socialhubmiddleware;
 
 import com.mongodb.BasicDBObject;
@@ -29,7 +33,7 @@ public class LoginUser {
 				// return success with token
 				output.put("success", true);
 				output.put("message", null);
-				output.put("token", TokenGenerator.getToken(inputObj.getString("username")));
+				output.put("token", TokenGenerator.getToken());
 			} else {
 				// return success=false
 				output.put("success", false);
