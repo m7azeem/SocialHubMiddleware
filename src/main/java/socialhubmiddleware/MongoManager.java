@@ -1,7 +1,17 @@
+/*
+ * Author(s) : Azeem, Balraj
+ * Date : 21/03/2017
+ */
+
 package socialhubmiddleware;
 
 import java.net.UnknownHostException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.TimeZone;
 
+import org.apache.commons.lang.time.DateUtils;
 import org.json.JSONObject;
 
 import com.mongodb.BasicDBObject;
@@ -72,16 +82,76 @@ public class MongoManager {
 	}
 	
 	public String addUser(BasicDBObject document){
+		
+		// hash the password
 		document.replace("password", Hasher.hashPass((String) document.get("password")));
+		
+		// Add default description and profilePictureUrl
+		document.append("description","You have not added any description yet.");
+		document.append("profilePictureUrl", "https://d30y9cdsu7xlg0.cloudfront.net/png/138926-200.png");
+		document.append("token", "");
+		document.append("tokenExpiry", "");
+		document.append("instagramToken", "");
+		document.append("twitterToken", "");
+		
+		// Debug
 		System.out.println(document.toString());
 		System.out.println();
+		
+		// Insert into mongoDB
 		Object obj = usersCollection.insert(document);
+		
+		// Debug
 		System.out.println(document.toString());
+		
+		// Return added document
 		return document.toString();
+		
 	}
 	
 	public void closeMongoConnection(){
 		mongoClient.close();
+	}
+
+	// This method will store a token for a given user along with an expire date
+	public void storeToken(String username, String token) {
+		
+		// Create document for update
+		BasicDBObject updateDocument = new BasicDBObject();
+		updateDocument.append("token",token);
+		updateDocument.append("tokenExpiry", getExpiryDateForToken());
+		
+		// Create document for set operation append
+		BasicDBObject setOperation = new BasicDBObject();
+		setOperation.append("$set", updateDocument);
+		
+		// Create a search query
+		BasicDBObject searchQuery = new BasicDBObject().append("username", username);
+		
+		// Update collection
+		usersCollection.update(searchQuery, setOperation);
+	}
+	
+	// The purpose of this method is to create and return an expiry date for the token 
+	private String getExpiryDateForToken(){
+		
+		// Get timezone
+		TimeZone tz = TimeZone.getTimeZone("UTC");
+		
+		// Set date format
+		DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm'Z'"); // Quoted "Z" to indicate UTC, no timezone offset
+		
+		// Set timezone
+		df.setTimeZone(tz);
+		
+		// Set expiry date
+		Date expiry = DateUtils.addHours(new Date(), 24);
+		
+		// Get ISO string
+		String expiryString = df.format(expiry);
+		
+		return expiryString;
+		
 	}
 
 }

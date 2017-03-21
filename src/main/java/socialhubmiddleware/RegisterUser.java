@@ -1,3 +1,7 @@
+/* Author(s) : Azeem, Balraj
+ * Date : 21/03/2017
+ */
+
 package socialhubmiddleware;
 
 import com.mongodb.BasicDBObject;
@@ -14,18 +18,28 @@ public class RegisterUser {
 	 * Note: the method in the MongoManager class does manages password hashing.
 	 */
 	public String register(String input){
+		
 		boolean exists;
+		
 		BasicDBObject inputObj = (BasicDBObject) JSON.parse(input);
 		//JSONObject jObj = new JSONObject(input);
+		
 		MongoManager mm =new MongoManager();
-		//check if username or email already exists
+
+		// Set default response variables
 		boolean success = true;
 		String errorMessage = null;
 		
+		// Check if user exists
 		if (!mm.checkIfEmailExists(inputObj.getString("email"))){
+			
 			if (!mm.checkIfUsernameExists(inputObj.getString("username"))){
+				
+				// Create new user if does not exists
 				mm.addUser(inputObj);
+				
 			} else {
+				
 				success = false;
 				errorMessage = "Username already in use!";
 				
@@ -35,6 +49,8 @@ public class RegisterUser {
 			errorMessage = "Email address already in use!";
 		}
 
+		
+		// Setup response and return 
 		BasicDBObject output = new BasicDBObject();
 		output.put("success", success);
 		output.put("message", errorMessage);
