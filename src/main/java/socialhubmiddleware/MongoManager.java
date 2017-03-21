@@ -84,6 +84,10 @@ public class MongoManager {
 		// Add default description and profilePictureUrl
 		document.append("description","You have not added any description yet.");
 		document.append("profilePictureUrl", "https://d30y9cdsu7xlg0.cloudfront.net/png/138926-200.png");
+		document.append("token", "");
+		document.append("tokenExpiry", "");
+		document.append("instagramToken", "");
+		document.append("twitterToken", "");
 		
 		// Debug
 		System.out.println(document.toString());
