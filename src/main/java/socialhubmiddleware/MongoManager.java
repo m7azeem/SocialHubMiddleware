@@ -1,3 +1,8 @@
+/*
+ * Author(s) : Azeem, Balraj
+ * Date : 21/03/2017
+ */
+
 package socialhubmiddleware;
 
 import java.net.UnknownHostException;
@@ -72,12 +77,27 @@ public class MongoManager {
 	}
 	
 	public String addUser(BasicDBObject document){
+		
+		// hash the password
 		document.replace("password", Hasher.hashPass((String) document.get("password")));
+		
+		// Add default description and profilePictureUrl
+		document.append("description","You have not added any description yet.");
+		document.append("profilePictureUrl", "https://d30y9cdsu7xlg0.cloudfront.net/png/138926-200.png");
+		
+		// Debug
 		System.out.println(document.toString());
 		System.out.println();
+		
+		// Insert into mongoDB
 		Object obj = usersCollection.insert(document);
+		
+		// Debug
 		System.out.println(document.toString());
+		
+		// Return added document
 		return document.toString();
+		
 	}
 	
 	public void closeMongoConnection(){
