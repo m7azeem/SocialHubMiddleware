@@ -1,3 +1,3 @@
 /*
-JUnit tests for Hasher class
+JUnit tests for RegisterUser class
 */
