@@ -1,0 +1,3 @@
+/*
+JUnit for LoginUser
+*/
