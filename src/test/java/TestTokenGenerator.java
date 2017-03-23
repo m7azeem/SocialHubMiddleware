@@ -1,0 +1,3 @@
+/*
+JUnit tests for TokenGenerator class
+*/
