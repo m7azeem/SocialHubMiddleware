@@ -115,14 +115,17 @@ documentation:
           application/json:
             example: |
               {
-                "username" : "m7azeem",
-                "details" : {
-                    "description" : "description",
-                    "profilePictureUrl" : "http://someurl.jpg",
-                    "theme" : "default"
-                  }
-                "hasTwitterAccessToken" : "false",
-                "hasInstagramAccessToken" : "true",
+                "success" : "true"
+                "data" : {
+                  "username" : "m7azeem",
+                  "details" : {
+                      "description" : "description",
+                      "profilePictureUrl" : "http://someurl.jpg",
+                      "theme" : "default"
+                    }
+                  "hasTwitterAccessToken" : "false",
+                  "hasInstagramAccessToken" : "true",
+                }
               }
       400:
         body:
@@ -167,7 +170,64 @@ documentation:
                 "success" : "false",
                 "message" : "Validation failed, etc."
               }
-                
-        
-      
-    
+/authorizeTwitter/{username}:
+  description: Authorization of twitter account for a given {username}
+  get:
+    description: Start authorization for {username} twitter
+    queryParameters:
+      token:
+        description: "User's authentication token"
+        required: true
+        type: string
+        example: "sNq2OKmGpA18homq4LJQyXyIc41/IIhq/Uii1zp6T6w="
+    responses:
+      200:
+        body:
+          application/json:
+            example: |
+              {
+                "success" : "true",
+                "data" : {
+                  "oauth_token" : "NPcudxy0yU5T3tBzho7iCotZ3cnetKwcTIRlX0iwRl0"
+                }
+              }
+      400:
+        body:
+          application/json:
+            example: |
+              {
+                "success" : "false",
+                "message" : "Invalid token, twitter already authorized, etc."
+              }
+  post:
+    description: Finalize authorization for {username} twitter
+    queryParameters:
+      token:
+        description: "User's authentication token"
+        required: true
+        type: string
+        example: "sNq2OKmGpA18homq4LJQyXyIc41/IIhq/Uii1zp6T6w="
+    body:
+      application/json:
+        example: |
+          {
+            "oauth_token" : "NPcudxy0yU5T3tBzho7iCotZ3cnetKwcTIRlX0iwRl0&",
+            "oauth_verifier" : "uw7NjWHT6OJ1MpJOXsHfNxoAhPKpgI8BlYDhxEjIBY"
+          }
+    responses:
+      200:
+        body:
+          application/json:
+            example: |
+              {
+                "success" : "true",
+                "message" : "Twitter successfully authorized"
+              }
+      400:
+        body:
+          application/json:
+            example: |
+              {
+                "success" : "false",
+                "message" : "Twitter authorization failed"
+              }
