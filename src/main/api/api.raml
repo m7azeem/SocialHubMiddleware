@@ -99,3 +99,75 @@ documentation:
                 "success" : "false",
                 "message" : "Incorrect password entered."
               }
+/userDetails/{username}:
+  description: Get user details or make changes to user details
+  get:
+    description: Fetchs the settings of a user, where user={username}
+    queryParameters:
+      token:
+        description: "User's authentication token"
+        required: true
+        type: string
+        example: "sNq2OKmGpA18homq4LJQyXyIc41/IIhq/Uii1zp6T6w="
+    responses:
+      200:
+        body:
+          application/json:
+            example: |
+              {
+                "username" : "m7azeem",
+                "details" : {
+                    "description" : "description",
+                    "profilePictureUrl" : "http://someurl.jpg",
+                    "theme" : "default"
+                  }
+                "hasTwitterAccessToken" : "false",
+                "hasInstagramAccessToken" : "true",
+              }
+      400:
+        body:
+          application/json:
+            example: |
+              {
+                "success" : "false",
+                "message" : "Invalid token | user doens't exists"
+              }
+  put:
+    description: Updates the settings of a user, where user={username}
+    queryParameters:
+      token:
+        description: "User's authentication token"
+        required: true
+        type: string
+        example: "sNq2OKmGpA18homq4LJQyXyIc41/IIhq/Uii1zp6T6w="
+    body:
+      application/json:
+        example: |
+          {
+            "details" : {
+              "description" : "description",
+              "profilePictureUrl" : "http://somenewurl.jpg",
+              "theme" : "pink"
+            }
+          }
+    responses:
+      200:
+        body:
+          application/json:
+            example: |
+              {
+                "success" : "true",
+                "message" : "User details were updated successfully"
+              }
+      400:
+        body:
+          application/json:
+            example: |
+              {
+                "success" : "false",
+                "message" : "Validation failed, etc."
+              }
+                
+        
+      
+    
