@@ -105,7 +105,7 @@ documentation:
     description: Fetchs the settings of a user, where user={username}
     queryParameters:
       token:
-        description: "User's authentication token"
+        description: "Client authentication token"
         required: true
         type: string
         example: "sNq2OKmGpA18homq4LJQyXyIc41/IIhq/Uii1zp6T6w="
@@ -139,7 +139,7 @@ documentation:
     description: Updates the settings of a user, where user={username}
     queryParameters:
       token:
-        description: "User's authentication token"
+        description: "Client authentication token"
         required: true
         type: string
         example: "sNq2OKmGpA18homq4LJQyXyIc41/IIhq/Uii1zp6T6w="
@@ -176,7 +176,7 @@ documentation:
     description: Start authorization for {username} Twitter and get a oauth_token
     queryParameters:
       token:
-        description: "User's authentication token"
+        description: "Client authentication token"
         required: true
         type: string
         example: "sNq2OKmGpA18homq4LJQyXyIc41/IIhq/Uii1zp6T6w="
@@ -203,7 +203,7 @@ documentation:
     description: Finalize authorization for {username} twitter by providing oauth_verifier
     queryParameters:
       token:
-        description: "User's authentication token"
+        description: "Client authentication token"
         required: true
         type: string
         example: "sNq2OKmGpA18homq4LJQyXyIc41/IIhq/Uii1zp6T6w="
@@ -236,7 +236,7 @@ documentation:
   post:
     queryParameters:
       token:
-        description: "User's authentication token"
+        description: "Client authentication token"
         required: true
         type: string
         example: "sNq2OKmGpA18homq4LJQyXyIc41/IIhq/Uii1zp6T6w="
@@ -262,4 +262,108 @@ documentation:
               {
                 "success" : "false",
                 "message" : "Instagram authorization failed"
+              }
+/getTwitterFeed/{username}:
+  description: Get Twitter feed for a give {username}
+  get:
+    description: Get Twitter feed for {username}
+    queryParameters:
+      token:
+        description: "Client authentication token"
+        required: true
+        type: string
+        example: "sNq2OKmGpA18homq4LJQyXyIc41/IIhq/Uii1zp6T6w="
+    responses:
+      200:
+        body:
+          application/json:
+            example: |
+              {
+                "success" : "true",
+                "data" : {
+                  "feed" : [
+                    {
+                        "user": 'exampleUser',
+                        "tweet": 'Example tweet 1',
+                        "timestamp": '29/11/2019',
+                        "type": 'text',
+                        "likes": 20
+                    }, {
+                        "user": 'exampleUser2',
+                        "tweet": 'Example tweet 2',
+                        "timestamp": '11/11/2011',
+                        "type": 'video',
+                        "source": 'http://techslides.com/demos/sample-videos/small.mp4',
+                        "sourceType": 'video/mp4',
+                        "likes": 5
+                    }, {
+                        "user": 'exampleUser',
+                        "tweet": 'Example tweet 1.2',
+                        "timestamp": '23/03/2013',
+                        "type": 'image',
+                        "source": 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/18/Fernando_Alonso_and_Sergio_Perez_2012_Malaysia.jpg/540px-Fernando_Alonso_and_Sergio_Perez_2012_Malaysia.jpg',
+                        "likes": 3
+                    }
+                  ]
+                }
+              }
+      400:
+        body:
+          application/json:
+            example: |
+              {
+                "success" : "false",
+                "message" : "Invalid token, unable to get feed, etc."
+              }
+/getInstagramFeed/{username}:
+  description: Get Twitter feed for a give {username}
+  get:
+    description: Get Twitter feed for a give {username}
+    queryParameters:
+      token:
+        description: "Client authentication token"
+        required: true
+        type: string
+        example: "sNq2OKmGpA18homq4LJQyXyIc41/IIhq/Uii1zp6T6w="
+    responses:
+      200:
+        body:
+          application/json:
+            example: |
+              {
+                "success" : "true",
+                "data" : {
+                  "feed" : [
+                      {
+                          "user" : 'exampleUser'
+                          "type": 'image',
+                          "source": 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/18/Fernando_Alonso_and_Sergio_Perez_2012_Malaysia.jpg/540px-Fernando_Alonso_and_Sergio_Perez_2012_Malaysia.jpg',
+                          "timestamp": '29/11/2013',
+                          "caption": 'My new car',
+                          "likes": 4
+                      }, {
+                          "user": 'exampleUser'
+                          "type": 'image',
+                          "source": 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d6/Replica_of_Auburn_Speedster_-_001.jpg/540px-Replica_of_Auburn_Speedster_-_001.jpg',
+                          "timestamp": '29/11/2011',
+                          "caption": 'My old car',
+                          "likes": 5
+                      }, {
+                          "user": 'exampleUser2'
+                          "type": 'image',
+                          "source": 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/Austin_Six_Saloon_(1932)_GS3184_5902656341.jpg/540px-Austin_Six_Saloon_(1932)_GS3184_5902656341.jpg',
+                          "timestamp": '29/11/2012',
+                          "caption": 'My new-old car',
+                          "likes": 123
+                      }
+                  ]
+                }
+              }
+      400:
+        body:
+          application/json:
+            example: |
+              {
+                "success" : "false",
+                "message" : "Invalid token, unable to get feed, etc."
               }
