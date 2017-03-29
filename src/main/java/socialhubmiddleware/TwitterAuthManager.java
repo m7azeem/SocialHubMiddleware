@@ -1,7 +1,6 @@
 package socialhubmiddleware;
 
 import java.net.*;
-import java.nio.charset.StandardCharsets;
 import java.security.GeneralSecurityException;
 import java.io.*; 
 import java.util.*;
@@ -21,7 +20,6 @@ public class TwitterAuthManager {
 	private static String CONSUMER_KEY = "KGiMs7bLmPxvnKYo1H1UQl9N9";
 	private static String CONSUMER_SECRET = "2rqi8bUMcx7BZiAxMRBFHwb7MJ6WEu9SmeAHRGM33VGAHJD198";
 	private static String CALLBACK_URL = "http://localhost:8080";
-
 
 	public static String encode(String value) 
 	{
@@ -71,11 +69,120 @@ public class TwitterAuthManager {
 		return nonce;
 	}
 	
-	// Returns a JSON object containing oauth_token, oauth_token_secret and oauth_callback_confirmed
-	private JSONObject getOAuthToken(){
+	// Returns a array of string containing oauth_token and oauth_token_secret respectively
+	private String getAccessToken(String oauth_token, String oauth_token_secret, String oauth_verifier){
+		
+		String response = "";
+		
+		try {
+			
+			// Parameters
+			String urlStr = "https://api.twitter.com/oauth/access_token";
+			String oauth_consumer_key = CONSUMER_KEY;
+			String oauth_nonce= generateNonce();
+			String oauth_signature = "";
+			String oauth_signature_method = "HMAC-SHA1";
+			String oauth_timestamp= "";
+			String oauth_version="1.0";
+			
+			// get the timestamp
+			Calendar tempcal = Calendar.getInstance();
+			long ts = tempcal.getTimeInMillis();// get current time in milliseconds
+			oauth_timestamp = (new Long(ts/1000)).toString(); // then divide by 1000 to get seconds
+			
+			// Generate signature
+			String parameter_string = encode("include_entities")+"="+encode("true")+"&"+encode("oauth_consumer_key")+"="+encode(oauth_consumer_key)+"&"+encode("oauth_nonce")+"="+encode(oauth_nonce)+"&"+encode("oauth_signature_method")+"="+encode(oauth_signature_method)+"&"+"oauth_timestamp"+"="+encode(oauth_timestamp)+"&"+encode("oauth_token")+"="+encode(oauth_token)+"&"+encode("oauth_verifier")+"="+encode(oauth_verifier)+"&"+encode("oauth_version")+"="+encode("1.0"); 
+			String signature_base_string = "POST&"+encode(urlStr)+"&"+encode(parameter_string);
+			// System.out.println(signature_base_string);
+			String signingKey = encode(CONSUMER_SECRET)+"&"+encode(oauth_token_secret);
+			oauth_signature = computeSignature(signature_base_string, signingKey);
+			// System.out.println(oauth_signature);
+			
+			// Get host and path
+			URI uri = new URI( urlStr); 
+			String host = uri.getHost( ); 
+			String path = uri.getRawPath( ); 
+			if (path == null || path.length( ) == 0) {
+			    path = "/";
+			} 
+			
+			// Get port
+			String protocol = uri.getScheme( ); 
+			int port = uri.getPort( ); 
+			if (port == -1) {
+			    if (protocol.equals("http")) { 
+			        port = 80; // http port 
+			    }
+			    else if (protocol.equals("https")) {
+			        port = 443; // https port 
+			    }
+			}
+			
+			// Create a socket
+			SSLSocketFactory sslFactory=(SSLSocketFactory) SSLSocketFactory.getDefault();
+			SSLSocket socket  = (SSLSocket) sslFactory.createSocket(host,port);
+			
+			// Initalize buffer reader and writer
+			BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream())); 
+			BufferedWriter out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream(), "UTF-8"));
+			
+			// Create body
+			String data = URLEncoder.encode("oauth_verifier", "UTF-8")+"="+URLEncoder.encode(oauth_verifier, "UTF-8");
+			
+			// Create header
+			String header = "POST "+path+" HTTP/1.0\r\n" + 
+                    "Host: "+host+"\r\n"
+                    + "Accept: */*\r\n"
+                    + "Authorization:OAuth "
+                    + "oauth_consumer_key=\"" +oauth_consumer_key
+                    + "\",oauth_nonce=\""+oauth_nonce
+                    + "\",oauth_signature=\""+URLEncoder.encode(oauth_signature, "UTF-8")
+                    + "\",oauth_signature_method=\""+oauth_signature_method
+                    + "\",oauth_timestamp=\""+oauth_timestamp
+                    + "\",oauth_token=\""+URLEncoder.encode(oauth_token,"UTF-8")
+                    + "\",oauth_version=\""+oauth_version
+                    + "\"\r\n"
+                    + "Content-Length: "+data.length()+"\r\n"
+                    + "Content-Type: application/x-www-form-urlencoded\r\n"
+                    + "\r\n";
+			
+			// DEBUG
+			System.out.println(header);
+			
+			// Write request
+			out.write(header);
+			out.write(data);
+			out.flush();
 
-		JSONParser parser = new JSONParser();
-		JSONObject json = null;
+			// Read params
+			String inputLine;  
+			
+			// Read input
+			while ((inputLine = in.readLine()) != null) { 
+				// DEBUG
+				System.out.println(inputLine);
+				// We assume the lastline should be the response
+				response = inputLine;
+			}
+			
+			// Close connections
+			out.close();
+			in.close(); 
+
+			// DEBUG
+			//System.out.println("Done."); 
+					
+		}catch(Exception e) { 
+			e.printStackTrace(); 
+		}
+		
+		return response;
+	}
+	
+	// Returns a array of string containing oauth_token, oauth_token_secret and oauth_callback_confirmed respectively. 
+	private String getOAuthToken(){
+
+		String response = "";
 		
 		try {
 			
@@ -98,8 +205,8 @@ public class TwitterAuthManager {
 			String parameter_string = encode("oauth_consumer_key")+"="+encode(oauth_consumer_key)+"&"+encode("oauth_nonce")+"="+encode(oauth_nonce)+"&"+encode("oauth_signature_method")+"="+encode(oauth_signature_method)+"&"+"oauth_timestamp"+"="+encode(oauth_timestamp)+"&"+encode("oauth_version")+"="+encode("1.0"); 
 			String signature_base_string = "POST&"+encode(urlStr)+"&"+encode(parameter_string);
 			// System.out.println(signature_base_string);
-			String signingKey = encode(CONSUMER_SECRET);
-			oauth_signature = computeSignature(signature_base_string, signingKey+"&");
+			String signingKey = encode(CONSUMER_SECRET)+"&";
+			oauth_signature = computeSignature(signature_base_string, signingKey);
 			// System.out.println(oauth_signature);
 			
 			// Get host and path
@@ -153,22 +260,19 @@ public class TwitterAuthManager {
 		
 					// Read params
 					String inputLine;  
-					String response = "";
 					
 					// Read input
 					while ((inputLine = in.readLine()) != null) { 
 						// DEBUG
-						//System.out.println(inputLine);
+						System.out.println(inputLine);
 						// We assume the lastline should be the response
 						response = inputLine;
 					}
 					
-					json = (JSONObject) parser.parse(response);
-					
 					// Close connections
 					out.close();
 					in.close(); 
-
+					
 					// DEBUG
 					//System.out.println("Done."); 
 					
@@ -176,10 +280,11 @@ public class TwitterAuthManager {
 			e.printStackTrace(); 
 		}
 		
-		return json;
+		return response;
 		
 	}
 	
+	// Returns a bearer token
 	private String getBearerToken(){
 		
 		String access_token = "";
@@ -274,11 +379,5 @@ public class TwitterAuthManager {
 		
 	}
 	
-	// DEBUG
-	/*
-		public static void main(String [] args){
-			TwitterAuthManager tm = new TwitterAuthManager();
-			tm.getOAuthToken();
-		}
-	 */
+	 
 	}
