@@ -35,6 +35,7 @@ public class RegisterUser {
 			
 			// Create new user if does not exists
 			mm.addUser(inputObj);
+			errorMessage = "Registration successful";
 			
 		} else {
 			
