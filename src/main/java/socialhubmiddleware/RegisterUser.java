@@ -30,23 +30,17 @@ public class RegisterUser {
 		boolean success = true;
 		String errorMessage = null;
 		
-		// Check if user exists
-		if (!mm.checkIfEmailExists(inputObj.getString("email"))){
+		
+		if (!mm.checkIfUsernameExists(inputObj.getString("username"))){
 			
-			if (!mm.checkIfUsernameExists(inputObj.getString("username"))){
-				
-				// Create new user if does not exists
-				mm.addUser(inputObj);
-				
-			} else {
-				
-				success = false;
-				errorMessage = "Username already in use!";
-				
-			}
+			// Create new user if does not exists
+			mm.addUser(inputObj);
+			
 		} else {
+			
 			success = false;
-			errorMessage = "Email address already in use!";
+			errorMessage = "Username already in use!";
+			
 		}
 
 		
