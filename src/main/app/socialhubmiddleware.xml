@@ -1,29 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<mule xmlns:http="http://www.mulesoft.org/schema/mule/http" 
+<mule xmlns:cors="http://www.mulesoft.org/schema/mule/cors" xmlns:json="http://www.mulesoft.org/schema/mule/json" xmlns:http="http://www.mulesoft.org/schema/mule/http" 
 xmlns:apikit="http://www.mulesoft.org/schema/mule/apikit" 
 xmlns="http://www.mulesoft.org/schema/mule/core" 
 xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
 	xmlns:spring="http://www.springframework.org/schema/beans" 
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans 
-	http://www.springframework.org/schema/beans/spring-beans-current.xsd
-http://www.mulesoft.org/schema/mule/core 
-http://www.mulesoft.org/schema/mule/core/current/mule.xsd
-http://www.mulesoft.org/schema/mule/http 
-http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
-http://www.mulesoft.org/schema/mule/apikit 
-http://www.mulesoft.org/schema/mule/apikit/current/mule-apikit.xsd">
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/apikit http://www.mulesoft.org/schema/mule/apikit/current/mule-apikit.xsd
+http://www.mulesoft.org/schema/mule/json http://www.mulesoft.org/schema/mule/json/current/mule-json.xsd
+http://www.mulesoft.org/schema/mule/cors http://www.mulesoft.org/schema/mule/cors/current/mule-cors.xsd">
     
     <!-- Configurations -->
     <http:listener-config name="api-httpListenerConfig" host="localhost" port="8082" 
     doc:name="HTTP API Listener Configuration" basePath="socialhub"/>
     <apikit:config name="api-config" raml="api.raml" consoleEnabled="false" doc:name="Router"/>
+    <cors:config name="Cors_Configuration" doc:name="Cors Configuration">
+        <cors:origins>
+            <cors:origin url="http://localhost:8080">
+                <cors:methods>
+                    <cors:method>OPTIONS</cors:method>
+                </cors:methods>
+            </cors:origin>
+        </cors:origins>
+    </cors:config>
+    
     
     <!-- API flows. All incoming calls are managed from here -->
     <flow name="api-main">
         <http:listener config-ref="api-httpListenerConfig" path="api/*" doc:name="HTTP"/>
         <apikit:router config-ref="api-config" doc:name="APIkit Router"/>
+        <cors:validate config-ref="Cors_Configuration" publicResource="true" acceptsCredentials="false" doc:name="CORS Validate"/>
         <!-- Add exception strategies later -->
     </flow>
     
