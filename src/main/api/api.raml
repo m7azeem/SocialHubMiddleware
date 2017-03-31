@@ -170,36 +170,9 @@ documentation:
                 "message" : "Validation failed, etc."
               }
 /authorizeTwitter/{username}:
-  description: Authorization of Twitter account for a given {username}
-  get:
-    description: Start authorization for {username} Twitter and get a oauth_token
-    queryParameters:
-      token:
-        description: "Client authentication token"
-        required: true
-        type: string
-        example: "sNq2OKmGpA18homq4LJQyXyIc41/IIhq/Uii1zp6T6w="
-    responses:
-      200:
-        body:
-          application/json:
-            example: |
-              {
-                "success" : "true",
-                "data" : {
-                  "oauth_token" : "NPcudxy0yU5T3tBzho7iCotZ3cnetKwcTIRlX0iwRl0"
-                }
-              }
-      400:
-        body:
-          application/json:
-            example: |
-              {
-                "success" : "false",
-                "message" : "Invalid token, twitter already authorized, etc."
-              }
+  description: Get twitter username of a {username}
   post:
-    description: Finalize authorization for {username} twitter by providing oauth_verifier
+    description: Get twitter username
     queryParameters:
       token:
         description: "Client authentication token"
@@ -210,8 +183,7 @@ documentation:
       application/json:
         example: |
           {
-            "oauth_token" : "NPcudxy0yU5T3tBzho7iCotZ3cnetKwcTIRlX0iwRl0&",
-            "oauth_verifier" : "uw7NjWHT6OJ1MpJOXsHfNxoAhPKpgI8BlYDhxEjIBY"
+            "twitter_username" : "balrajbains1337"
           }
     responses:
       200:
@@ -220,7 +192,7 @@ documentation:
             example: |
               {
                 "success" : "true",
-                "message" : "Twitter successfully authorized"
+                "message" : "Twitter successfully connected"
               }
       400:
         body:
@@ -228,10 +200,10 @@ documentation:
             example: |
               {
                 "success" : "false",
-                "message" : "Twitter authorization failed"
+                "message" : "Twitter connection failed"
               }
 /authorizeInstagram/{username}:
-  description: Authorization of Instagram account for a given {username} by providing a code
+  description: Get access token for Instagram account for a given {username}
   post:
     queryParameters:
       token:
@@ -243,7 +215,7 @@ documentation:
       application/json:
         example: |
           {
-            "code" : "NPcudxy0yU5T3tBzho7iCotZ3cnetKwcTIRlX0iwRl0&"
+            "instagram_access_token" : "NPcudxy0yU5T3tBzho7iCotZ3cnetKwcTIRlX0iwRl0&"
           }
     responses:
       200:
@@ -252,7 +224,7 @@ documentation:
             example: |
               {
                 "success" : "true",
-                "message" : "Instagram successfully authorized"
+                "message" : "Token successfully aquired"
               }
       400:
         body:
@@ -260,7 +232,7 @@ documentation:
             example: |
               {
                 "success" : "false",
-                "message" : "Instagram authorization failed"
+                "message" : "Failure due to something"
               }
 /getTwitterFeed/{username}:
   description: Get Twitter feed for a give {username}

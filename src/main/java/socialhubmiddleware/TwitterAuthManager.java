@@ -1,9 +1,7 @@
 package socialhubmiddleware;
 
 import java.net.*;
-import java.nio.charset.StandardCharsets;
-import java.io.*; 
-import java.util.*;
+import java.io.*;
 
 import javax.net.ssl.SSLSocket;
 import javax.net.ssl.SSLSocketFactory;
@@ -12,8 +10,9 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
 public class TwitterAuthManager {
-
-	private String getBearerToken(){
+	
+	// Returns a bearer token
+	public String getBearerToken(){
 		
 		String access_token = "";
 		
@@ -43,7 +42,7 @@ public class TwitterAuthManager {
 			    }
 			}
 			
-			// Create a PORT
+			// Create a socket
 			SSLSocketFactory sslFactory=(SSLSocketFactory) SSLSocketFactory.getDefault();
 			SSLSocket socket  = (SSLSocket) sslFactory.createSocket(host,port);
 			
@@ -106,5 +105,6 @@ public class TwitterAuthManager {
 		return access_token;
 		
 	}
-		
-}
+	
+	 
+	}
