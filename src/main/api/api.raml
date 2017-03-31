@@ -9,6 +9,7 @@ documentation:
       API for user-authentication, and retriving posts from twitter and instagram.
       
 /registerUser:
+  description : 'Register a user'
   post:
     description: Takes the user details as input and registers user in the database. 
     body:
@@ -44,6 +45,7 @@ documentation:
                 "message" : "Username already in use!"
               }
 /loginUser:
+  description : 'Login a user'
   post:
     description: Takes the user's login details as input, and returns success=true if login details are correct   
     body:
@@ -62,33 +64,6 @@ documentation:
                   "success" : "true",
                   "message" : null
                   "token" : "128bitStringBlablabalabaaljadacio"
-                }
-      400:
-        body:
-          application/json:
-            example: |
-              {
-                "success" : "false",
-                "message" : "Incorrect password entered."
-              }   
-/testTwiter:
-  post:
-    description: Takes the user's login details as input, and returns success=true if login details are correct   
-    body:
-      application/json:
-        example: |  
-          {
-                  "userName" : "m7azeem",
-                  "password" : hidden
-          }
-    responses:
-      200:
-        body:
-          application/json:
-            example: |
-                {
-                  "success" : "true",
-                  "message" : null
                 }
       400:
         body:
@@ -121,8 +96,8 @@ documentation:
                       "description" : "description",
                       "profilePictureUrl" : "http://someurl.jpg",
                       "theme" : "default",
-                      "hasTwitterAccess" : "false",
-                      "hasInstagramAccess" : "true"
+                      "hasTwitterAccess" : false,
+                      "hasInstagramAccess" : true
                     }
                 }
               }
