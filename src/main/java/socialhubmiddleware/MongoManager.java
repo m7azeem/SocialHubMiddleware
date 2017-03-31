@@ -185,5 +185,19 @@ public void updateUserDetails(String username, BasicDBObject userDetails){
 		BasicDBObject sQuery = new BasicDBObject().append("username", username);
 		usersCollection.update(sQuery, newDocument);
 	}
+
+public boolean checkToken(String username, String token) {
+	BasicDBObject query = new BasicDBObject().append("username", username);
+	BasicDBObject projection = new BasicDBObject().append("token", 1).append("tokenValidty", 1).append("_id",-1);
+	
+	DBCursor cursor = usersCollection.find(query,projection);
+	BasicDBObject output = (BasicDBObject) cursor.next();
+	
+	if(output.get("token").equals(token)){
+		return true;
+	}else{
+		return false;
+	}
+}
 	
 }

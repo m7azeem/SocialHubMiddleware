@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<mule xmlns:cors="http://www.mulesoft.org/schema/mule/cors" xmlns:json="http://www.mulesoft.org/schema/mule/json" xmlns:http="http://www.mulesoft.org/schema/mule/http" 
+<mule xmlns:tracking="http://www.mulesoft.org/schema/mule/ee/tracking" xmlns:cors="http://www.mulesoft.org/schema/mule/cors" xmlns:json="http://www.mulesoft.org/schema/mule/json" xmlns:http="http://www.mulesoft.org/schema/mule/http" 
 xmlns:apikit="http://www.mulesoft.org/schema/mule/apikit" 
 xmlns="http://www.mulesoft.org/schema/mule/core" 
 xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
@@ -9,10 +9,10 @@ xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
 http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
 http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
-
 http://www.mulesoft.org/schema/mule/apikit http://www.mulesoft.org/schema/mule/apikit/current/mule-apikit.xsd
 http://www.mulesoft.org/schema/mule/json http://www.mulesoft.org/schema/mule/json/current/mule-json.xsd
-http://www.mulesoft.org/schema/mule/cors http://www.mulesoft.org/schema/mule/cors/current/mule-cors.xsd">
+http://www.mulesoft.org/schema/mule/cors http://www.mulesoft.org/schema/mule/cors/current/mule-cors.xsd
+http://www.mulesoft.org/schema/mule/ee/tracking http://www.mulesoft.org/schema/mule/ee/tracking/current/mule-tracking-ee.xsd">
     
     <!-- Configurations -->
     <http:listener-config name="api-httpListenerConfig" host="localhost" port="8082" 
@@ -54,10 +54,6 @@ http://www.mulesoft.org/schema/mule/cors http://www.mulesoft.org/schema/mule/cor
         <component class="socialhubmiddleware.LoginUser" doc:name="Java"/>
 		
     </flow>
-    <flow name="post:/testTwitter:api-config">
-		<byte-array-to-string-transformer doc:name="Byte Array to String"/>
-		<set-payload value="#[['success':true, 'message': null]]" doc:name="Set Payload"/>
-    </flow>
     
     <flow name="get:/userDetails/{username}:api-config">
 		<byte-array-to-string-transformer doc:name="Byte Array to String"/>
@@ -70,5 +66,9 @@ http://www.mulesoft.org/schema/mule/cors http://www.mulesoft.org/schema/mule/cor
 		<byte-array-to-string-transformer doc:name="Byte Array to String"/>
 		<component class="socialhubmiddleware.PutUserDetails" doc:name="Java"/>
 		<!-- <set-payload value="#[['success':true, 'message': null]]" doc:name="Set Payload"/> -->
+    </flow>
+    <flow name="post:/authenticate:api-config">
+        <byte-array-to-string-transformer doc:name="Byte Array to String"/>
+        <component class="socialhubmiddleware.Authenticate" doc:name="Java"/>
     </flow>
 </mule>
