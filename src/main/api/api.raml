@@ -63,7 +63,7 @@ documentation:
                 {
                   "success" : "true",
                   "message" : null
-                  "token" : "128bitStringBlablabalabaaljadacio"
+                  "token" : "sNq2OKmGpA18homq4LJQyXyIc41/IIhq/Uii1zp6T6w="
                 }
       400:
         body:
@@ -72,6 +72,34 @@ documentation:
               {
                 "success" : "false",
                 "message" : "Incorrect password entered."
+              }
+/authenticate:
+  description: Allows a client to check validty of a token
+  post:
+    description: Check if a token given username and token
+    body:
+      application/json:
+        example: |
+          {
+            "username" : "m7azeem",
+            "token" : "sNq2OKmGpA18homq4LJQyXyIc41/IIhq/Uii1zp6T6w="
+          }
+    responses:
+      200:
+        body:
+          application/json:
+            example: |
+              {
+                "success" : "true",
+                "message" : "Token valid"
+              }
+      400:
+        body:
+          application/json:
+            example: |
+              {
+                "success" : "false",
+                "message" : "Token invalid"
               }
 /userDetails/{username}:
   description: Get user details or make changes to user details
@@ -312,4 +340,32 @@ documentation:
               {
                 "success" : "false",
                 "message" : "Invalid token, unable to get feed, etc."
+              }
+/logout:
+  description: Logout a user
+  post:
+    description: Logout a given user after confirming their token
+    body:
+      application/json:
+        example: |
+          {
+            "username" : "m7azeem",
+            "token" : "sNq2OKmGpA18homq4LJQyXyIc41/IIhq/Uii1zp6T6w="
+          }
+    responses:
+      200:
+        body:
+          application/json:
+            example: |
+              {
+                "success" : "true",
+                "message" : "Logout successful"
+              }
+      400:
+        body:
+          application/json:
+            example: |
+              {
+                "success" : "false",
+                "message" : "Logout failed, please try again"
               }
