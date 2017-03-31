@@ -18,6 +18,7 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
+import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
 
 public class MongoManager {
@@ -153,5 +154,20 @@ public class MongoManager {
 		return expiryString;
 		
 	}
-
+	
+	public BasicDBObject getUserDetails(String username){
+		BasicDBObject searchQuery = new BasicDBObject();
+		searchQuery.put("username", username);
+		DBCursor cursor = usersCollection.find(searchQuery);
+			BasicDBObject dbo = (BasicDBObject) cursor.next();
+			return dbo;
+	}
+	
+public void updateUserDetails(String username, BasicDBObject userDetails){
+		BasicDBObject newDocument = new BasicDBObject();
+		newDocument.append("$set", userDetails);	
+		BasicDBObject sQuery = new BasicDBObject().append("username", username);
+		usersCollection.update(sQuery, newDocument);
+	}
+	
 }
