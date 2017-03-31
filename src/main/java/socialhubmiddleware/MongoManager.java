@@ -87,13 +87,20 @@ public class MongoManager {
 		// hash the password
 		document.replace("password", Hasher.hashPass((String) document.get("password")));
 		
-		// Add default description and profilePictureUrl
-		document.append("description","You have not added any description yet.");
-		document.append("profilePictureUrl", "https://d30y9cdsu7xlg0.cloudfront.net/png/138926-200.png");
+		// Create a new DB object for userDetails
+		BasicDBObject detailsDocument = new BasicDBObject();
+		
+		// Add properties to detailsDocument
+		detailsDocument.append("description","You have not added any description yet.");
+		detailsDocument.append("profilePictureUrl", "https://d30y9cdsu7xlg0.cloudfront.net/png/138926-200.png");
+		detailsDocument.append("theme","default");
+		detailsDocument.append("hasTwitterAccess", false);
+		detailsDocument.append("hasInstagramAccess", false);
+		
+		// Add properties to document
+		document.append("details",detailsDocument);
 		document.append("token", "");
 		document.append("tokenExpiry", "");
-		document.append("instagramToken", "");
-		document.append("twitterToken", "");
 		
 		// Debug
 		System.out.println(document.toString());
@@ -133,7 +140,7 @@ public class MongoManager {
 		usersCollection.update(searchQuery, setOperation);
 	}
 	
-	// The purpose of this method is to create and return an expiry date for the token 
+	// The purpose of this method is to create and return an expiry date for the token
 	private String getExpiryDateForToken(){
 		
 		// Get timezone
@@ -158,9 +165,18 @@ public class MongoManager {
 	public BasicDBObject getUserDetails(String username){
 		BasicDBObject searchQuery = new BasicDBObject();
 		searchQuery.put("username", username);
-		DBCursor cursor = usersCollection.find(searchQuery);
-			BasicDBObject dbo = (BasicDBObject) cursor.next();
-			return dbo;
+		
+		// Create project object
+		BasicDBObject queryProjection = new BasicDBObject();
+		
+		// Set projection properties
+		queryProjection.append("username",1);
+		queryProjection.append("details",1);
+		queryProjection.append("_id",0);
+		
+		DBCursor cursor = usersCollection.find(searchQuery,queryProjection);
+		BasicDBObject dbo = (BasicDBObject) cursor.next();
+		return dbo;
 	}
 	
 public void updateUserDetails(String username, BasicDBObject userDetails){
@@ -169,5 +185,19 @@ public void updateUserDetails(String username, BasicDBObject userDetails){
 		BasicDBObject sQuery = new BasicDBObject().append("username", username);
 		usersCollection.update(sQuery, newDocument);
 	}
+
+public boolean checkToken(String username, String token) {
+	BasicDBObject query = new BasicDBObject().append("username", username);
+	BasicDBObject projection = new BasicDBObject().append("token", 1).append("tokenValidty", 1).append("_id",-1);
+	
+	DBCursor cursor = usersCollection.find(query,projection);
+	BasicDBObject output = (BasicDBObject) cursor.next();
+	
+	if(output.get("token").equals(token)){
+		return true;
+	}else{
+		return false;
+	}
+}
 	
 }
