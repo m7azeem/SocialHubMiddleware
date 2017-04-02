@@ -4,7 +4,10 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.util.JSON;
 
 public class Authenticate {
-
+	
+	/*
+	 * Checks if the session-token is valid  
+	 */
 	public String authenticate(String input){
 		
 		BasicDBObject inputObj = (BasicDBObject) JSON.parse(input);
