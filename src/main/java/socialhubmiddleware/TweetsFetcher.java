@@ -40,14 +40,8 @@ public class TweetsFetcher implements Callable{
 				ArrayList<TweetPost> tweetsList = parseTweets(jsonArray);			
 				boolean success = true;
 				output.put("success", success);
-				//BasicDBObject data = new BasicDBObject("data", tweetsList);
 				BasicDBList data = new BasicDBList();
 				data.addAll(tweetsList);
-//				ArrayList tags = new ArrayList();
-//				tags.add("tag1");
-//				tags.add("tag2");
-//				BasicDBObject data = new BasicDBObject("data", tags);
-				
 				output.append("data", data);
 			}
 		} else {
@@ -56,17 +50,8 @@ public class TweetsFetcher implements Callable{
 			output.put("success", success);
 			output.put("message", message);
 		}
-		
-		
-		
+
 		mm.closeMongoConnection();
-		///////////////////////////////////testing
-/*		output = new BasicDBObject();
-		boolean success = false;
-		String message = "Invalid token | user doens't exists";
-		output.put("success", success);
-		output.put("message", message);
-	*/	//////////testing
 		return output/*.toString()*/;
 	}
 	
