@@ -27,6 +27,17 @@ public class TweetsFetcher implements Callable{
 		BasicDBObject output = new BasicDBObject();
 		
 		if (mm.checkToken(username, token)) {
+			//check if twiter-username is saved
+			if (!mm.checkIfTwitterAccessExists(username)){
+				boolean success = false;
+				String message = "No Twitter username saved.";
+				output.put("success", success);
+				output.put("message", message);
+				mm.closeMongoConnection();
+				return output;
+			}
+			
+			
 			//update username variable (which was socialHub username) with twitterUsername
 			username = mm.getTwitterUsername(username);
 			TwitterRequestManager twitterRequestManager = new TwitterRequestManager();

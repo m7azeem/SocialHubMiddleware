@@ -189,10 +189,25 @@ public void updateUserDetails(String username, BasicDBObject userDetails){
 	}
 
 public void updateTwitterUsername(String username, String twitterUsername){
+	// Create document for update
+				BasicDBObject updateDocument = new BasicDBObject();
+				updateDocument.append("twitterUsername", twitterUsername);
+				updateDocument.append("hasTwitterAccess",true);
+				// Create document for set operation append
+				BasicDBObject setOperation = new BasicDBObject();
+				setOperation.append("$set", updateDocument);
+				// Create a search query
+				BasicDBObject searchQuery = new BasicDBObject().append("username", username);
+				// Update collection
+				usersCollection.update(searchQuery, setOperation);
+				
+/*	
 	BasicDBObject newDocument = new BasicDBObject();
 	newDocument.append("$set",  new BasicDBObject().append("twitterUsername", twitterUsername));
 	BasicDBObject sQuery = new BasicDBObject().append("username", username);
 	usersCollection.update(sQuery, newDocument);
+*/	
+	
 }
 
 public String getTwitterUsername(String username){
@@ -262,6 +277,17 @@ public boolean checkToken(String username, String token) {
 		if (cursor.hasNext()){
 			BasicDBObject output = (BasicDBObject) cursor.next();
 			return output.getBoolean("hasInstagramToken");
+		}
+		return false;
+	}
+	
+	public boolean checkIfTwitterAccessExists(String username){
+		BasicDBObject query = new BasicDBObject().append("username", username);
+		BasicDBObject projection = new BasicDBObject().append("hasTwitterAccess", 1).append("_id",-1);
+		DBCursor cursor = usersCollection.find(query,projection);
+		if (cursor.hasNext()){
+			BasicDBObject output = (BasicDBObject) cursor.next();
+			return output.getBoolean("hasTwitterAccess");
 		}
 		return false;
 	}
