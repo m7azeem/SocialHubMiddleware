@@ -27,6 +27,15 @@ public class InstagramPostsFetcher implements Callable{
 		BasicDBObject output = new BasicDBObject();
 		
 		if (mm.checkToken(username, token)) {
+			//check if instagram-token exists
+			if (!mm.checkIfInstagramTokenExists(username)){
+				boolean success = false;
+				String message = "No instagram access-token saved.";
+				output.put("success", success);
+				output.put("message", message);
+				mm.closeMongoConnection();
+				return output;
+			}
 			InstagramRequestManager instagramRequestManager = new InstagramRequestManager(mm.getInstagramToken(username));
 			JSONArray jsonArray = instagramRequestManager.getUserMedia();
 			if (jsonArray==null){

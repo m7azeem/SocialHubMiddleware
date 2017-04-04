@@ -129,6 +129,7 @@ public class MongoManager {
 		BasicDBObject updateDocument = new BasicDBObject();
 		updateDocument.append("token",token);
 		updateDocument.append("tokenExpiry", getExpiryDateForToken());
+		updateDocument.append("hasInstagramToken ",true);
 		
 		// Create document for set operation append
 		BasicDBObject setOperation = new BasicDBObject();
@@ -252,5 +253,16 @@ public boolean checkToken(String username, String token) {
 		DBCursor cursor = usersCollection.find(query,projection);
 		BasicDBObject output = (BasicDBObject) cursor.next();
 		return output.getString("instagramToken");
+	}
+	
+	public boolean checkIfInstagramTokenExists(String username){
+		BasicDBObject query = new BasicDBObject().append("username", username);
+		BasicDBObject projection = new BasicDBObject().append("hasInstagramToken", 1).append("_id",-1);
+		DBCursor cursor = usersCollection.find(query,projection);
+		if (cursor.hasNext()){
+			BasicDBObject output = (BasicDBObject) cursor.next();
+			return output.getBoolean("hasInstagramToken");
+		}
+		return false;
 	}
 }
