@@ -238,4 +238,12 @@ public boolean checkToken(String username, String token) {
 		}
 		return false;
 	}
+
+	public void updateInstagramToken(String username, String instagramToken) {
+		BasicDBObject newDocument = new BasicDBObject();
+		newDocument.append("$set",  new BasicDBObject().append("instagramToken", instagramToken));
+		BasicDBObject sQuery = new BasicDBObject().append("username", username);
+		usersCollection.update(sQuery, newDocument);
+		
+	}
 }
