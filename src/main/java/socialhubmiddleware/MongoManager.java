@@ -7,6 +7,7 @@ package socialhubmiddleware;
 
 import java.net.UnknownHostException;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TimeZone;
@@ -188,16 +189,38 @@ public void updateUserDetails(String username, BasicDBObject userDetails){
 
 public boolean checkToken(String username, String token) {
 	BasicDBObject query = new BasicDBObject().append("username", username);
-	BasicDBObject projection = new BasicDBObject().append("token", 1).append("tokenValidty", 1).append("_id",-1);
+	BasicDBObject projection = new BasicDBObject().append("token", 1).append("tokenExpiry", 1).append("_id",-1);
 	
 	DBCursor cursor = usersCollection.find(query,projection);
 	BasicDBObject output = (BasicDBObject) cursor.next();
 	
 	if(output.get("token").equals(token)){
-		return true;
+		if (hasTokenExpired((String) output.get("tokenExpiry"))){
+			return true;
+		}
+		return false;
 	}else{
 		return false;
 	}
 }
-	
+
+	//Checks if the current time is more than the tokenExpiry time
+	private boolean hasTokenExpired(String tokenExpiry){
+		TimeZone tz = TimeZone.getTimeZone("UTC");
+		DateFormat df =new SimpleDateFormat("yyyy-MM-dd'T'HH:mm'Z'"); // Quoted "Z" to indicate UTC, no timezone offset
+		df.setTimeZone(tz);
+		df.setLenient(true);
+		try {
+			Date expiryDate = df.parse((String) tokenExpiry);
+		
+			Date currentTime = new Date();
+			if (expiryDate.compareTo(currentTime) > 0) {
+				return true;
+			}
+			return false;
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
 }

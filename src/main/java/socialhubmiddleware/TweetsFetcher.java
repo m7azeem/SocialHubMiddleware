@@ -3,6 +3,7 @@ package socialhubmiddleware;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Map;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -18,11 +19,14 @@ public class TweetsFetcher implements Callable{
 	public Object onCall(MuleEventContext eventContext) throws Exception {
 		
 		String username = (String) eventContext.getMessage().getInvocationProperty("username");
+		Map<String, String> queryParams = eventContext.getMessage().getInboundProperty("http.query.params");
+		String token = (String) queryParams.get("token");
+		
 		MongoManager mm = new MongoManager();
-
+		
 		BasicDBObject output = new BasicDBObject();
 		
-		if (true) {//do token checks in this if. (don't need username checks)
+		if (mm.checkToken(username, token)) {
 			TwitterRequestManager twitterRequestManager = new TwitterRequestManager();
 			JSONArray jsonArray = twitterRequestManager.getUserTimeline(username, "3");
 			if (jsonArray.size()==0){
