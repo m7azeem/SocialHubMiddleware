@@ -85,4 +85,9 @@ http://www.mulesoft.org/schema/mule/ee/tracking http://www.mulesoft.org/schema/m
 		<component class="socialhubmiddleware.InstagramAuthorizer" doc:name="Java"/>
     </flow>
     
+    <flow name="get:/getInstagramFeed/{username}:api-config">
+		<byte-array-to-string-transformer doc:name="Byte Array to String"/>
+		<component class="socialhubmiddleware.InstagramPostsFetcher" doc:name="Java"/>
+    </flow>
+    
 </mule>

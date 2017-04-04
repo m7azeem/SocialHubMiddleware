@@ -244,6 +244,13 @@ public boolean checkToken(String username, String token) {
 		newDocument.append("$set",  new BasicDBObject().append("instagramToken", instagramToken));
 		BasicDBObject sQuery = new BasicDBObject().append("username", username);
 		usersCollection.update(sQuery, newDocument);
-		
+	}
+	
+	public String getInstagramToken(String username){
+		BasicDBObject query = new BasicDBObject().append("username", username);
+		BasicDBObject projection = new BasicDBObject().append("instagramToken", 1).append("_id",-1);
+		DBCursor cursor = usersCollection.find(query,projection);
+		BasicDBObject output = (BasicDBObject) cursor.next();
+		return output.getString("instagramToken");
 	}
 }

@@ -45,8 +45,8 @@ public class InstagramRequestManager {
 
 		JSONArray jsonArray = (JSONArray) json.get("data");
 
-		System.out.println(jsonArray.get(0));
-
+		//System.out.println(jsonArray.get(0));
+		
 		return jsonArray;
 
 	}
