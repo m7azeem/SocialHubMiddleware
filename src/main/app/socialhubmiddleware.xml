@@ -90,4 +90,9 @@ http://www.mulesoft.org/schema/mule/ee/tracking http://www.mulesoft.org/schema/m
 		<component class="socialhubmiddleware.InstagramPostsFetcher" doc:name="Java"/>
     </flow>
     
+    <flow name="post:/logout:api-config">
+		<byte-array-to-string-transformer doc:name="Byte Array to String"/>
+		<component class="socialhubmiddleware.LogoutManager" doc:name="Java"/>
+    </flow>
+    
 </mule>

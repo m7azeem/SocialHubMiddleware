@@ -155,7 +155,7 @@ public class MongoManager {
 		df.setTimeZone(tz);
 		
 		// Set expiry date
-		Date expiry = DateUtils.addHours(new Date(), 24);
+		Date expiry = new Date();
 		
 		// Get ISO string
 		String expiryString = df.format(expiry);
@@ -163,6 +163,28 @@ public class MongoManager {
 		return expiryString;
 		
 	}
+	// The purpose of this method is to create and return an expired date for the token
+		private String getExpiredDateForToken(){
+			
+			// Get timezone
+			TimeZone tz = TimeZone.getTimeZone("UTC");
+			
+			// Set date format
+			DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm'Z'"); // Quoted "Z" to indicate UTC, no timezone offset
+			
+			// Set timezone
+			df.setTimeZone(tz);
+			
+			// Set expiry date
+			Date expiry = DateUtils.addHours(new Date(), -24);
+			
+			// Get ISO string
+			String expiryString = df.format(expiry);
+			
+			return expiryString;
+			
+		}
+	
 	
 	public BasicDBObject getUserDetails(String username){
 		BasicDBObject searchQuery = new BasicDBObject();
@@ -235,9 +257,28 @@ public boolean checkToken(String username, String token) {
 			return false;
 		}
 	}
-	return false;
-	
+	return false;	
 }
+public void deleteToken(String username){
+	// Create document for update
+	BasicDBObject updateDocument = new BasicDBObject();	
+	updateDocument.append("tokenExpiry", getExpiryDateForToken());
+	System.out.println( "EXPIRY DATE::"+getExpiryDateForToken());
+	// Create document for set operation append
+	BasicDBObject setOperation = new BasicDBObject();
+	setOperation.append("$set", updateDocument);
+	// Create a search query
+	BasicDBObject searchQuery = new BasicDBObject().append("username", username);
+	// Update collection
+	usersCollection.update(searchQuery, setOperation);
+	///////////////////////////////////////////////////////////////////////////
+/*			updateDocument.append("token",token);
+			updateDocument.append("hasInstagramToken ",true);
+
+	*/
+	/////////////////////////////////////////////////////////////////////////
+}
+
 
 	//Checks if the current time is more than the tokenExpiry time
 	private boolean hasTokenExpired(String tokenExpiry){
