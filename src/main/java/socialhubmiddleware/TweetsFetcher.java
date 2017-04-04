@@ -27,22 +27,32 @@ public class TweetsFetcher implements Callable{
 		BasicDBObject output = new BasicDBObject();
 		
 		if (mm.checkToken(username, token)) {
+			//update username variable (which was socialHub username) with twitterUsername
+			username = mm.getTwitterUsername(username);
 			TwitterRequestManager twitterRequestManager = new TwitterRequestManager();
 			JSONArray jsonArray = twitterRequestManager.getUserTimeline(username, "3");
-			if (jsonArray.size()==0){
+			if (jsonArray==null){
+				//400 response			
 				boolean success = false;
-				String message = "No tweets made by this account";
+				String message = "Twitter connection failed. Twitter account doesn't exist.";
 				output.put("success", success);
 				output.put("message", message);
 			} else {
-				
-				//200 response
-				ArrayList<TweetPost> tweetsList = parseTweets(jsonArray);			
-				boolean success = true;
-				output.put("success", success);
-				BasicDBList data = new BasicDBList();
-				data.addAll(tweetsList);
-				output.append("data", data);
+				if (jsonArray.size()==0){
+					boolean success = false;
+					String message = "No tweets made by this account";
+					output.put("success", success);
+					output.put("message", message);
+				} else {
+					
+					//200 response
+					ArrayList<TweetPost> tweetsList = parseTweets(jsonArray);			
+					boolean success = true;
+					output.put("success", success);
+					BasicDBList data = new BasicDBList();
+					data.addAll(tweetsList);
+					output.append("data", data);
+				}
 			}
 		} else {
 			boolean success = false;
@@ -52,7 +62,7 @@ public class TweetsFetcher implements Callable{
 		}
 
 		mm.closeMongoConnection();
-		return output/*.toString()*/;
+		return output;
 	}
 	
 	public ArrayList<TweetPost> parseTweets(JSONArray jsonArray) {

@@ -194,6 +194,14 @@ public void updateTwitterUsername(String username, String twitterUsername){
 	usersCollection.update(sQuery, newDocument);
 }
 
+public String getTwitterUsername(String username){
+	BasicDBObject query = new BasicDBObject().append("username", username);
+	BasicDBObject projection = new BasicDBObject().append("twitterUsername", 1).append("_id",-1);
+	DBCursor cursor = usersCollection.find(query,projection);
+	BasicDBObject output = (BasicDBObject) cursor.next();
+	return output.getString("twitterUsername");
+}
+
 public boolean checkToken(String username, String token) {
 	BasicDBObject query = new BasicDBObject().append("username", username);
 	BasicDBObject projection = new BasicDBObject().append("token", 1).append("tokenExpiry", 1).append("_id",-1);
