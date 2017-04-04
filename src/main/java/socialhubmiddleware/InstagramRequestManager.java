@@ -36,17 +36,14 @@ public class InstagramRequestManager {
 
 		String response = makeRequest(urlString);
 
-		System.out.println(response);
-
 		JSONParser parser = new JSONParser();
-		JSONObject json = (JSONObject) parser.parse(response);
-
-		System.out.println(json.get("data").toString());
-
+		JSONObject json;
+		try {
+			json = (JSONObject) parser.parse(response);
+		} catch (java.lang.ClassCastException e) {
+			return null;
+		}
 		JSONArray jsonArray = (JSONArray) json.get("data");
-
-		//System.out.println(jsonArray.get(0));
-		
 		return jsonArray;
 
 	}

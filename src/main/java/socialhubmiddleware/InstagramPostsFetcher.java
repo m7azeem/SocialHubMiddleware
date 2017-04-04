@@ -28,41 +28,29 @@ public class InstagramPostsFetcher implements Callable{
 		
 		if (mm.checkToken(username, token)) {
 			InstagramRequestManager instagramRequestManager = new InstagramRequestManager(mm.getInstagramToken(username));
-			ArrayList<InstagramPost> postsList = parseTweets(instagramRequestManager.getUserMedia());
-			boolean success = true;
-			output.put("success", success);
-			BasicDBList data = new BasicDBList();
-          	data.addAll(postsList);
-          	output.append("feed", data);
-			
-			
-			/*//update username variable (which was socialHub username) with twitterUsername
-			username = mm.getTwitterUsername(username);
-			TwitterRequestManager twitterRequestManager = new TwitterRequestManager();
-			JSONArray jsonArray = twitterRequestManager.getUserTimeline(username, "3");
+			JSONArray jsonArray = instagramRequestManager.getUserMedia();
 			if (jsonArray==null){
 				//400 response			
 				boolean success = false;
-				String message = "Twitter connection failed. Twitter account doesn't exist.";
+				String message = "Instagram connection failed. Instagram account doesn't exist.";
 				output.put("success", success);
 				output.put("message", message);
 			} else {
 				if (jsonArray.size()==0){
 					boolean success = false;
-					String message = "No tweets made by this account";
+					String message = "No posts made by this account";
 					output.put("success", success);
 					output.put("message", message);
 				} else {
-					
 					//200 response
-					ArrayList<TweetPost> tweetsList = parseTweets(jsonArray);			
+					ArrayList<InstagramPost> postsList = parseTweets(jsonArray);
 					boolean success = true;
 					output.put("success", success);
-					BasicDBList data = new BasicDBList();
-					data.addAll(tweetsList);
-					output.append("data", data);
+					BasicDBList feed = new BasicDBList();
+		          	feed.addAll(postsList);
+		          	output.append("feed", feed);
 				}
-			}*/
+			}
 		} else {
 			boolean success = false;
 			String message = "Invalid token | user doens't exists";
