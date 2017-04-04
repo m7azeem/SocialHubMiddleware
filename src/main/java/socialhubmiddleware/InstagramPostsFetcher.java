@@ -87,6 +87,11 @@ public class InstagramPostsFetcher implements Callable{
 			Date date = new Date((long)Long.parseLong(instaPost.timestamp) *1000);
 			instaPost.timestamp = new SimpleDateFormat("MMM dd HH:mm yyyy").format(date);
 			postsList.add(instaPost);
+			
+			//send maximum of 10 posts
+			if (i ==9){
+				break;
+			}
 		}
 		return postsList;
 	}

@@ -122,6 +122,11 @@ public class TweetsFetcher implements Callable{
 			}
 			
 			tweetsList.add(tweetPost);
+			
+			//send maximum of 10 posts
+			if (i ==9){
+				break;
+			}
 		}
 		return tweetsList;
 	}
