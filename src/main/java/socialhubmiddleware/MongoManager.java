@@ -187,6 +187,13 @@ public void updateUserDetails(String username, BasicDBObject userDetails){
 		usersCollection.update(sQuery, newDocument);
 	}
 
+public void updateTwitterUsername(String username, String twitterUsername){
+	BasicDBObject newDocument = new BasicDBObject();
+	newDocument.append("$set",  new BasicDBObject().append("twitterUsername", twitterUsername));
+	BasicDBObject sQuery = new BasicDBObject().append("username", username);
+	usersCollection.update(sQuery, newDocument);
+}
+
 public boolean checkToken(String username, String token) {
 	BasicDBObject query = new BasicDBObject().append("username", username);
 	BasicDBObject projection = new BasicDBObject().append("token", 1).append("tokenExpiry", 1).append("_id",-1);

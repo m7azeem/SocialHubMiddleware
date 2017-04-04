@@ -70,6 +70,11 @@ http://www.mulesoft.org/schema/mule/ee/tracking http://www.mulesoft.org/schema/m
         <component class="socialhubmiddleware.Authenticate" doc:name="Java"/>
     </flow>
     
+    <flow name="post:/authorizeTwitter/{username}:api-config">
+		<byte-array-to-string-transformer doc:name="Byte Array to String"/>
+		<component class="socialhubmiddleware.TwitterAuthorizer" doc:name="Java"/>
+    </flow>
+    
     <flow name="get:/getTwitterFeed/{username}:api-config">
 		<byte-array-to-string-transformer doc:name="Byte Array to String"/>
 		<component class="socialhubmiddleware.TweetsFetcher" doc:name="Java"/>
