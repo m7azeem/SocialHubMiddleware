@@ -42,8 +42,13 @@ public class TwitterRequestManager {
 		String response = makeRequest(urlString);
 
 		JSONParser parser = new JSONParser();
-		JSONArray json = (JSONArray) parser.parse(response);
-
+		
+		JSONArray json;
+		try {
+			json = (JSONArray) parser.parse(response);
+		} catch (java.lang.ClassCastException e) {
+			json=null;	
+		}
 		return json;
 	}
 

@@ -27,12 +27,7 @@ public class TwitterAuthorizer implements Callable{
 		
 		if (mm.checkToken(username, token)) {
 			TwitterRequestManager twitterRequestManager = new TwitterRequestManager();
-			JSONArray jsonArray;
-			try {
-				jsonArray = twitterRequestManager.getUserTimeline(inputObj.getString("twitter_username"), "1");
-			} catch (java.lang.ClassCastException e) {
-				jsonArray=null;
-			}
+			JSONArray jsonArray = twitterRequestManager.getUserTimeline(inputObj.getString("twitter_username"), "1");
 			if (jsonArray!=null){
 				//save twitter username to db
 				mm.updateTwitterUsername(username, inputObj.getString("twitter_username"));
