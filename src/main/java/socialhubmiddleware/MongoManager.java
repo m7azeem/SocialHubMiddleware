@@ -223,16 +223,20 @@ public boolean checkToken(String username, String token) {
 	BasicDBObject projection = new BasicDBObject().append("token", 1).append("tokenExpiry", 1).append("_id",-1);
 	
 	DBCursor cursor = usersCollection.find(query,projection);
-	BasicDBObject output = (BasicDBObject) cursor.next();
-	
-	if(output.get("token").equals(token)){
-		if (hasTokenExpired((String) output.get("tokenExpiry"))){
-			return true;
+	if (cursor.hasNext()){
+		BasicDBObject output = (BasicDBObject) cursor.next();
+		
+		if(output.get("token").equals(token)){
+			if (hasTokenExpired((String) output.get("tokenExpiry"))){
+				return true;
+			}
+			return false;
+		}else{
+			return false;
 		}
-		return false;
-	}else{
-		return false;
 	}
+	return false;
+	
 }
 
 	//Checks if the current time is more than the tokenExpiry time
