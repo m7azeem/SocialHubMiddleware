@@ -23,6 +23,9 @@ http://www.mulesoft.org/schema/mule/ee/tracking http://www.mulesoft.org/schema/m
             <cors:origin url="http://localhost:8080">
                 <cors:methods>
                     <cors:method>OPTIONS</cors:method>
+                    <cors:method>POST</cors:method>
+                    <cors:method>PUT</cors:method>
+                    <cors:method>GET</cors:method>
                 </cors:methods>
             </cors:origin>
         </cors:origins>
@@ -47,52 +50,62 @@ http://www.mulesoft.org/schema/mule/ee/tracking http://www.mulesoft.org/schema/m
     <flow name="post:/registerUser:api-config">
 		<byte-array-to-string-transformer doc:name="Byte Array to String"/>
         <component doc:name="Java" class="socialhubmiddleware.RegisterUser"/>
+        <cors:validate config-ref="Cors_Configuration" publicResource="false" acceptsCredentials="false" doc:name="CORS Validate"/>
     </flow>
     
     <flow name="post:/loginUser:api-config">
 		<byte-array-to-string-transformer doc:name="Byte Array to String"/>
         <component class="socialhubmiddleware.LoginUser" doc:name="Java"/>
+        <cors:validate config-ref="Cors_Configuration" publicResource="false" acceptsCredentials="false" doc:name="CORS Validate"/>
 		
     </flow>
     
     <flow name="get:/userDetails/{username}:api-config">
 		<byte-array-to-string-transformer doc:name="Byte Array to String"/>
 		<component class="socialhubmiddleware.GetUserDetails" doc:name="Java"/>
+        <cors:validate config-ref="Cors_Configuration" publicResource="false" acceptsCredentials="false" doc:name="CORS Validate"/>
 		<!-- <set-payload value="#[['success':true, 'message': null]]" doc:name="Set Payload"/> -->
     </flow>
     <flow name="put:/userDetails/{username}:api-config">
 		<byte-array-to-string-transformer doc:name="Byte Array to String"/>
 		<component class="socialhubmiddleware.PutUserDetails" doc:name="Java"/>
+        <cors:validate config-ref="Cors_Configuration" publicResource="false" acceptsCredentials="false" doc:name="CORS Validate"/>
 		<!-- <set-payload value="#[['success':true, 'message': null]]" doc:name="Set Payload"/> -->
     </flow>
     <flow name="post:/authenticate:api-config">
         <byte-array-to-string-transformer doc:name="Byte Array to String"/>
         <component class="socialhubmiddleware.Authenticate" doc:name="Java"/>
+        <cors:validate config-ref="Cors_Configuration" publicResource="false" acceptsCredentials="false" doc:name="CORS Validate"/>
     </flow>
     
     <flow name="post:/authorizeTwitter/{username}:api-config">
 		<byte-array-to-string-transformer doc:name="Byte Array to String"/>
 		<component class="socialhubmiddleware.TwitterAuthorizer" doc:name="Java"/>
+        <cors:validate config-ref="Cors_Configuration" publicResource="false" acceptsCredentials="false" doc:name="CORS Validate"/>
     </flow>
     
     <flow name="get:/getTwitterFeed/{username}:api-config">
 		<byte-array-to-string-transformer doc:name="Byte Array to String"/>
 		<component class="socialhubmiddleware.TweetsFetcher" doc:name="Java"/>
+        <cors:validate config-ref="Cors_Configuration" publicResource="false" acceptsCredentials="false" doc:name="CORS Validate"/>
     </flow>
     
     <flow name="post:/authorizeInstagram/{username}:api-config">
 		<byte-array-to-string-transformer doc:name="Byte Array to String"/>
 		<component class="socialhubmiddleware.InstagramAuthorizer" doc:name="Java"/>
+        <cors:validate config-ref="Cors_Configuration" publicResource="false" acceptsCredentials="false" doc:name="CORS Validate"/>
     </flow>
     
     <flow name="get:/getInstagramFeed/{username}:api-config">
 		<byte-array-to-string-transformer doc:name="Byte Array to String"/>
 		<component class="socialhubmiddleware.InstagramPostsFetcher" doc:name="Java"/>
+        <cors:validate config-ref="Cors_Configuration" publicResource="false" acceptsCredentials="false" doc:name="CORS Validate"/>
     </flow>
     
     <flow name="post:/logout:api-config">
 		<byte-array-to-string-transformer doc:name="Byte Array to String"/>
 		<component class="socialhubmiddleware.LogoutManager" doc:name="Java"/>
+        <cors:validate config-ref="Cors_Configuration" publicResource="false" acceptsCredentials="false" doc:name="CORS Validate"/>
     </flow>
     
 </mule>
