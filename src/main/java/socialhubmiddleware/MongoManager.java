@@ -213,7 +213,7 @@ public void updateTwitterUsername(String username, String twitterUsername){
 	// Create document for update
 				BasicDBObject updateDocument = new BasicDBObject();
 				updateDocument.append("twitterUsername", twitterUsername);
-				updateDocument.append("hasTwitterAccess",true);
+				updateDocument.append("details.hasTwitterAccess",true);
 				// Create document for set operation append
 				BasicDBObject setOperation = new BasicDBObject();
 				setOperation.append("$set", updateDocument);
@@ -314,11 +314,12 @@ public void deleteToken(String username){
 	
 	public boolean checkIfTwitterAccessExists(String username){
 		BasicDBObject query = new BasicDBObject().append("username", username);
-		BasicDBObject projection = new BasicDBObject().append("hasTwitterAccess", 1).append("_id",-1);
+		BasicDBObject projection = new BasicDBObject().append("details", 1).append("_id",-1);
 		DBCursor cursor = usersCollection.find(query,projection);
+		
 		if (cursor.hasNext()){
 			BasicDBObject output = (BasicDBObject) cursor.next();
-			return output.getBoolean("hasTwitterAccess");
+			return ((BasicDBObject)output.get("details")).getBoolean("hasTwitterAccess");
 		}
 		return false;
 	}
