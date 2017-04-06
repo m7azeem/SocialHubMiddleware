@@ -21,15 +21,13 @@ public class GetUserDetails implements Callable{
 		Map<String, String> queryParams = eventContext.getMessage().getInboundProperty("http.query.params");
 		String token = (String) queryParams.get("token");
 
-		if (mm.checkIfUsernameExists(username)) {
-			if (mm.checkToken(username, token)) {
+		if (mm.checkIfUsernameExists(username) && mm.checkToken(username, token)) {
 				boolean success = true;
 				output.put("success", success);
 				
 				BasicDBObject data = mm.getUserDetails(username);
 				data.remove("password");
 				output.append("data", data);
-			}
 		} else {
 			boolean success = false;
 			String message = "Invalid token | user doens't exists";
