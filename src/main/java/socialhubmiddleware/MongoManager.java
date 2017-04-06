@@ -287,11 +287,16 @@ public void deleteToken(String username){
 	}
 
 	public void updateInstagramToken(String username, String instagramToken) {
+		//updating token value
 		BasicDBObject newDocument = new BasicDBObject();
 		newDocument.append("$set",  new BasicDBObject().append("instagramToken", instagramToken));
-		newDocument.append("$set",  new BasicDBObject().append("details.hasInstagramAccess", true));
+		//newDocument.append("$set",  new BasicDBObject().append("details.hasInstagramAccess", true));
 		BasicDBObject sQuery = new BasicDBObject().append("username", username);
 		usersCollection.update(sQuery, newDocument);
+		//updating hasInstagramToken value
+		 newDocument = new BasicDBObject();
+			newDocument.append("$set",  new BasicDBObject().append("details.hasInstagramAccess", true));
+			usersCollection.update(sQuery, newDocument);
 	}
 	
 	public String getInstagramToken(String username){
