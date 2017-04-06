@@ -41,7 +41,7 @@ public class TweetsFetcher implements Callable{
 			//update username variable (which was socialHub username) with twitterUsername
 			username = mm.getTwitterUsername(username);
 			TwitterRequestManager twitterRequestManager = new TwitterRequestManager();
-			JSONArray jsonArray = twitterRequestManager.getUserTimeline(username, "3");
+			JSONArray jsonArray = twitterRequestManager.getUserTimeline(username, "10");
 			if (jsonArray==null){
 				//400 response			
 				boolean success = false;
