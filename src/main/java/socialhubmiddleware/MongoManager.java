@@ -154,7 +154,7 @@ public class MongoManager {
 		df.setTimeZone(tz);
 		
 		// Set expiry date
-		Date expiry = new Date();
+		Date expiry = DateUtils.addHours(new Date(), 24);
 		
 		// Get ISO string
 		String expiryString = df.format(expiry);
@@ -239,7 +239,6 @@ public boolean checkToken(String username, String token) {
 	DBCursor cursor = usersCollection.find(query,projection);
 	if (cursor.hasNext()){
 		BasicDBObject output = (BasicDBObject) cursor.next();
-		
 		if(output.get("token").equals(token)){
 			if (hasTokenExpired((String) output.get("tokenExpiry"))){
 				return true;
