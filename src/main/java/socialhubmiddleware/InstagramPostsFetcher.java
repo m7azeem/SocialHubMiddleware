@@ -79,10 +79,14 @@ public class InstagramPostsFetcher implements Callable{
 			JSONObject jPost = (JSONObject) jsonArray.get(i);
 			
 			instaPost.type = (String) jPost.get("type");
+			if(instaPost.type.equals("video")){
+				instaPost.source = (String) ((JSONObject)((JSONObject)jPost.get("videos")).get("standard_resolution")).get("url");
+			}else{
+				instaPost.source =  (String) ((JSONObject)((JSONObject)jPost.get("images")).get("standard_resolution")).get("url");
+			}
 			instaPost.likes = (int) Math.toIntExact((long) ((JSONObject)jPost.get("likes")).get("count"));
 			instaPost.user = (String) ((JSONObject)jPost.get("user")).get("full_name");
 			instaPost.caption = (String) ((JSONObject)jPost.get("caption")).get("text");
-			instaPost.source =  (String) ((JSONObject)((JSONObject)jPost.get("images")).get("standard_resolution")).get("url");
 			instaPost.timestamp = (String) jPost.get("created_time");//in unix-time format
 			Date date = new Date((long)Long.parseLong(instaPost.timestamp) *1000);
 			instaPost.timestamp = new SimpleDateFormat("MMM dd HH:mm yyyy").format(date);
