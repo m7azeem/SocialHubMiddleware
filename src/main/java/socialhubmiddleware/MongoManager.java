@@ -289,6 +289,7 @@ public void deleteToken(String username){
 	public void updateInstagramToken(String username, String instagramToken) {
 		BasicDBObject newDocument = new BasicDBObject();
 		newDocument.append("$set",  new BasicDBObject().append("instagramToken", instagramToken));
+		newDocument.append("$set",  new BasicDBObject().append("details.hasInstagramAccess", true));
 		BasicDBObject sQuery = new BasicDBObject().append("username", username);
 		usersCollection.update(sQuery, newDocument);
 	}
@@ -303,11 +304,11 @@ public void deleteToken(String username){
 	
 	public boolean checkIfInstagramTokenExists(String username){
 		BasicDBObject query = new BasicDBObject().append("username", username);
-		BasicDBObject projection = new BasicDBObject().append("hasInstagramToken", 1).append("_id",-1);
+		BasicDBObject projection = new BasicDBObject().append("details", 1).append("_id",-1);
 		DBCursor cursor = usersCollection.find(query,projection);
 		if (cursor.hasNext()){
 			BasicDBObject output = (BasicDBObject) cursor.next();
-			return output.getBoolean("hasInstagramToken");
+			return ((BasicDBObject)output.get("details")).getBoolean("hasInstagramAccess");
 		}
 		return false;
 	}
