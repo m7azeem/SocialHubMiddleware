@@ -28,6 +28,14 @@ http://www.mulesoft.org/schema/mule/ee/tracking http://www.mulesoft.org/schema/m
                     <cors:method>GET</cors:method>
                 </cors:methods>
             </cors:origin>
+            <cors:origin url="http://127.0.0.1:8080">
+                <cors:methods>
+                    <cors:method>OPTIONS</cors:method>
+                    <cors:method>POST</cors:method>
+                    <cors:method>PUT</cors:method>
+                    <cors:method>GET</cors:method>
+                </cors:methods>
+            </cors:origin>
         </cors:origins>
     </cors:config>
     
