@@ -129,7 +129,6 @@ public class MongoManager {
 		BasicDBObject updateDocument = new BasicDBObject();
 		updateDocument.append("token",token);
 		updateDocument.append("tokenExpiry", getExpiryDateForToken());
-		updateDocument.append("hasInstagramToken ",true);
 		
 		// Create document for set operation append
 		BasicDBObject setOperation = new BasicDBObject();
@@ -221,14 +220,7 @@ public void updateTwitterUsername(String username, String twitterUsername){
 				// Create a search query
 				BasicDBObject searchQuery = new BasicDBObject().append("username", username);
 				// Update collection
-				usersCollection.update(searchQuery, setOperation);
-				
-/*	
-	BasicDBObject newDocument = new BasicDBObject();
-	newDocument.append("$set",  new BasicDBObject().append("twitterUsername", twitterUsername));
-	BasicDBObject sQuery = new BasicDBObject().append("username", username);
-	usersCollection.update(sQuery, newDocument);
-*/	
+				usersCollection.update(searchQuery, setOperation);	
 	
 }
 
@@ -271,12 +263,7 @@ public void deleteToken(String username){
 	BasicDBObject searchQuery = new BasicDBObject().append("username", username);
 	// Update collection
 	usersCollection.update(searchQuery, setOperation);
-	///////////////////////////////////////////////////////////////////////////
-/*			updateDocument.append("token",token);
-			updateDocument.append("hasInstagramToken ",true);
 
-	*/
-	/////////////////////////////////////////////////////////////////////////
 }
 
 
