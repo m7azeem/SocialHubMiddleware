@@ -1,5 +1,7 @@
 package socialhubmiddleware;
 
+import java.util.Map;
+
 import org.mule.api.MuleEventContext;
 import org.mule.api.lifecycle.Callable;
 
@@ -20,14 +22,18 @@ public class PutUserDetails implements Callable{
 		boolean success = true;
 		String message = null;
 		
+		Map<String, String> queryParams = eventContext.getMessage().getInboundProperty("http.query.params");
+		String token = (String) queryParams.get("token");
+		
 		//save details if user exists
 		if (mongoManager.checkIfUsernameExists(username)){
-			mongoManager.updateUserDetails(username, userDetails);
-			
-			message="User details were updated successfully";
+			if (mongoManager.checkToken(username, token)) {
+				mongoManager.updateUserDetails(username, userDetails);
+				message="User details were updated successfully";
+			}
 		} else {
 			success= false;
-			message="User doesn't exist. No details saved!";
+			message = "Invalid token | user doens't exists";
 		}
 		
 		// Setup response and return 
